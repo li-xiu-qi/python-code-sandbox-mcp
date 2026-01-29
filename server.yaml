@@ -1,0 +1,28 @@
+name: python-code-sandbox-mcp
+image: mcp/python-code-sandbox-mcp
+type: server
+meta:
+  category: development
+  tags:
+    - python
+    - sandbox
+    - docker
+    - development
+about:
+  title: Python Code Sandbox
+  description: A secure Python execution sandbox using Docker containers. Supports ephemeral runs, session persistence, and automatic dependency installation with local caching.
+  icon: https://raw.githubusercontent.com/python/black/main/docs/_static/logo2-readme.png
+source:
+  project: https://github.com/li-xiu-qi/python-code-sandbox-mcp
+config:
+  description: Configure the Python sandbox resources and cache.
+  env:
+    - name: PIP_CACHE_PATH
+      description: "Host path for persistent pip cache (e.g. ~/.mcp/pip-cache)"
+      example: "/Users/yourname/.mcp/pip-cache"
+    - name: SANDBOX_MEMORY_LIMIT
+      description: "Memory limit for the sandbox (default: 2g)"
+      example: "2g"
+    - name: SANDBOX_CPU_QUOTA
+      description: "CPU quota for the sandbox (default: 50000)"
+      example: "50000"

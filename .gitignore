@@ -1,0 +1,39 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Project Specific Cache
+.cache/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# IDEs
+.idea/
+# .vscode/ is included to share recommended extensions and formatting settings
+
+
+# Verification scripts (internal testing)
+verify_sandbox.py
+
+# Docker artifacts
+Dockerfile.old
+docker-compose.yml
+
+参考项目/
+
+.gemini/
+
+.agents/
+
+.agents/

@@ -1,0 +1,19 @@
+{
+  "servers": {
+    "python-code-sandbox (dev)": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "run",
+        "python",
+        "-m",
+        "python_code_sandbox_mcp.server"
+      ],
+      "env": {
+        "PIP_CACHE_PATH": "${workspaceFolder}/.cache/pip",
+        "ENABLE_PIP_CACHE": "true",
+        "LOG_LEVEL": "DEBUG"
+      }
+    }
+  }
+}
