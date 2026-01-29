@@ -40,7 +40,7 @@ docker pull python:3.11-slim
         "-v", "/var/run/docker.sock:/var/run/docker.sock",
         "-e", "SANDBOX_MEMORY_LIMIT=1g",
         "-e", "SANDBOX_CPU_LIMIT=0.5",
-        "li-xiu-qi/python-code-sandbox-mcp"
+        "ghcr.io/li-xiu-qi/python-code-sandbox-mcp"
       ]
     }
   }
@@ -53,7 +53,7 @@ docker pull python:3.11-slim
 docker run --rm -it \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -e SANDBOX_MEMORY_LIMIT=1g \
-  li-xiu-qi/python-code-sandbox-mcp
+  ghcr.io/li-xiu-qi/python-code-sandbox-mcp
 ```
 
 ## 配置说明
