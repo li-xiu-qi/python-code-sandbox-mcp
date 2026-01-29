@@ -47,3 +47,22 @@ packages = ["src/python_code_sandbox_mcp"]
 **现象**：报错 `Unrecognized named-value: 'id'`，位于 `publish.yml`。
 **原因**：错误地使用了 `${{ id.step_id.outputs }}`。GitHub Actions 的上下文对象应为 `steps`。
 **解决**：将表达式修正为 `${{ steps.step_id.outputs }}`。
+
+### 问题：Docker 登录失败 (Username and password required)
+**现象**：在 `publish.yml` 步骤中报错登录失败。
+**原因**：未在仓库 Secrets 中配置 `DOCKER_USERNAME`。
+**解决**：推荐迁移至 **GHCR** (GitHub Container Registry)。使用内置的 `${{ github.actor }}` 和 `${{ secrets.GITHUB_TOKEN }}` 即可自动登录，无需手动配置密钥。
+
+### 问题：GitHub Packages 权限拒绝
+**现象**：推送到 GHCR 时报错权限不足。
+**原因**：默认的 `GITHUB_TOKEN` 只有读取权限。
+**解决**：在工作流文件的 Job 级别显式添加：
+```yaml
+permissions:
+  packages: write
+```
+
+### 问题：Metadata Action 标签解析错误 (Unknown tag type attribute: latest)
+**现象**：报错 `Unknown tag type attribute: latest`。
+**原因**：YAML 多行字符串解析歧义或 `type=latest` 的特定限制。
+**解决**：改用更稳健的 `type=raw,value=latest` 定义方式。

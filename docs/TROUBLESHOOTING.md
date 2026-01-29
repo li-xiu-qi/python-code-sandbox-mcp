@@ -47,3 +47,22 @@ packages = ["src/python_code_sandbox_mcp"]
 **Symptom**: Error `Unrecognized named-value: 'id'` in `publish.yml`.
 **Reason**: Using `${{ id.step_id.outputs }}` instead of the correct `steps` context.
 **Solution**: Correct the expression to `${{ steps.step_id.outputs }}`.
+
+### Issue: Docker Login Failure (Username and password required)
+**Symptom**: `Login failed` error in the `publish.yml` step.
+**Reason**: Missing `DOCKER_USERNAME` and `DOCKER_PASSWORD` in repository secrets.
+**Solution**: Migrate to **GHCR** (GitHub Container Registry). It uses built-in `${{ github.actor }}` and `${{ secrets.GITHUB_TOKEN }}` for automatic authentication.
+
+### Issue: GitHub Packages Permission Denied
+**Symptom**: Error when pushing to `ghcr.io`.
+**Reason**: Default `GITHUB_TOKEN` permissions are read-only.
+**Solution**: Explicitly grant write access in the workflow job:
+```yaml
+permissions:
+  packages: write
+```
+
+### Issue: Metadata Action Tag Error (Unknown tag type attribute: latest)
+**Symptom**: Error `Unknown tag type attribute: latest`.
+**Reason**: YAML parsing issues with multiline blocks or `type=latest` interpretation.
+**Solution**: Use the more robust `type=raw,value=latest` definition.
