@@ -16,12 +16,14 @@ COPY LICENSE .
 # Install dependencies
 # We use --no-install-project to install only the external dependencies first,
 # which allows us to cache this layer even when source code changes.
-ENV UV_SYSTEM_PYTHON=1
 RUN uv sync --frozen --no-dev --no-install-project
 
 # Copy source and install the project
 COPY src/ src/
 RUN uv sync --frozen --no-dev
+
+# Use the virtual environment's Python
+ENV PATH="/app/.venv/bin:$PATH"
 
 # Set the python path to include src
 ENV PYTHONPATH=/app/src

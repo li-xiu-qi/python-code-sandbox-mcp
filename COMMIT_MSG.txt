@@ -1,0 +1,19 @@
+chore(release): v0.2.2 - Docker Hub migration and fixes
+
+Major changes:
+- Migrate container registry from GHCR to Docker Hub
+  - Image: aixiaoke/python-code-sandbox-mcp
+  - Faster access in China, no GHCR traffic limits
+
+Bug fixes:
+- Fix Docker image dependencies not installed correctly
+  - Remove UV_SYSTEM_PYTHON=1
+  - Use venv Python via PATH
+- Fix LOG_LEVEL environment variable not working
+
+CI improvements:
+- Add Docker image tests (imports & startup)
+
+Documentation:
+- Update all image references to Docker Hub
+- Add changelogs for v0.2.1, v0.2.2

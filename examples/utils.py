@@ -36,6 +36,7 @@ def get_server_params(memory_limit: str = "1g", cpu_limit: str = "0.5") -> Stdio
         env={
             "SANDBOX_MEMORY_LIMIT": memory_limit,
             "SANDBOX_CPU_LIMIT": cpu_limit,
+            "LOG_LEVEL": os.environ.get("LOG_LEVEL", "INFO"),
             # Windows Docker 
             "DOCKER_HOST": os.environ.get("DOCKER_HOST", ""),
             # 
@@ -64,8 +65,9 @@ def get_server_params_with_custom_dir(files_dir: str, memory_limit: str = "1g", 
         env={
             "SANDBOX_MEMORY_LIMIT": memory_limit,
             "SANDBOX_CPU_LIMIT": cpu_limit,
+            "LOG_LEVEL": os.environ.get("LOG_LEVEL", "INFO"),
             "DOCKER_HOST": os.environ.get("DOCKER_HOST", ""),
-            "SANDBOX_FILES_DIR": files_dir,  # 
+            "SANDBOX_FILES_DIR": files_dir,
         }
     )
 
@@ -89,8 +91,9 @@ def get_server_params_no_persistence(memory_limit: str = "1g", cpu_limit: str = 
         env={
             "SANDBOX_MEMORY_LIMIT": memory_limit,
             "SANDBOX_CPU_LIMIT": cpu_limit,
+            "LOG_LEVEL": os.environ.get("LOG_LEVEL", "INFO"),
             "DOCKER_HOST": os.environ.get("DOCKER_HOST", ""),
-            "SANDBOX_FILES_DIR": "",  # 
+            "SANDBOX_FILES_DIR": "",
         }
     )
 
@@ -115,7 +118,7 @@ def get_docker_server_params(memory_limit: str = "1g", cpu_limit: str = "0.5") -
             "-v", "/var/run/docker.sock:/var/run/docker.sock",
             "-e", f"SANDBOX_MEMORY_LIMIT={memory_limit}",
             "-e", f"SANDBOX_CPU_LIMIT={cpu_limit}",
-            "ghcr.io/li-xiu-qi/python-code-sandbox-mcp"
+            "aixiaoke/python-code-sandbox-mcp"
         ],
         env={}
     )

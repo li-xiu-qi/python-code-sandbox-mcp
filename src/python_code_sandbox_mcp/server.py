@@ -1,25 +1,29 @@
 import base64
 import logging
+import os
 import threading
 import time
 from typing import List, Union
 
-import httpx
-from bs4 import BeautifulSoup
+# Load environment variables from .env file before other imports
 from dotenv import load_dotenv
-from mcp.server.fastmcp import FastMCP
-from pydantic import Field
 
-import mcp.types as types
-
-from . import docker_utils
-
-# Load environment variables from .env file if it exists
 load_dotenv()
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
+# Configure logging before importing other modules
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
+logging.basicConfig(level=getattr(logging, LOG_LEVEL, logging.INFO))
 logger = logging.getLogger("python-code-sandbox")
+
+# Import other modules after logging configuration  # noqa: E402
+import httpx  # noqa: E402
+from bs4 import BeautifulSoup  # noqa: E402
+from mcp.server.fastmcp import FastMCP  # noqa: E402
+from pydantic import Field  # noqa: E402
+
+import mcp.types as types  # noqa: E402
+
+from . import docker_utils  # noqa: E402
 
 # Initialize FastMCP
 mcp = FastMCP("python-code-sandbox")

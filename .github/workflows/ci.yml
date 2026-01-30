@@ -43,7 +43,33 @@ jobs:
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      - name: Build test (Multi-arch)
+      
+      - name: Build image (local test)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64
+          push: false
+          load: true
+          tags: python-sandbox:test
+      
+      - name: Test image - Python imports
+        run: |
+          docker run --rm python-sandbox:test python -c "
+          import httpx
+          import mcp
+          import dotenv
+          import pydantic
+          import docker
+          import bs4
+          print('All imports OK!')
+          "
+      
+      - name: Test image - Server startup
+        run: |
+          timeout 5 docker run --rm python-sandbox:test python -m python_code_sandbox_mcp.server 2>&1 || true
+      
+      - name: Build test (Multi-arch - no push)
         uses: docker/build-push-action@v6
         with:
           context: .

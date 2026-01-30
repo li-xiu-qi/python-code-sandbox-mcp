@@ -1,6 +1,6 @@
 [project]
 name = "python-code-sandbox-mcp"
-version = "0.2.0"
+version = "0.2.2"
 description = "A secure Python execution sandbox MCP server using Docker"
 authors = [
     {name = "筱可", email = "xiaoke@example.com"}

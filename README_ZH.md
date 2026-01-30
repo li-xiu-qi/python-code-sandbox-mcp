@@ -1,4 +1,4 @@
-# Python 代码沙箱 MCP 服务端
+﻿# Python 代码沙箱 MCP 服务端
 
 [![English](https://img.shields.io/badge/lang-English-blue.svg)](README.md)
 
@@ -40,7 +40,7 @@ docker pull python:3.11-slim
         "-v", "/var/run/docker.sock:/var/run/docker.sock",
         "-e", "SANDBOX_MEMORY_LIMIT=1g",
         "-e", "SANDBOX_CPU_LIMIT=0.5",
-        "ghcr.io/li-xiu-qi/python-code-sandbox-mcp"
+        "aixiaoke/python-code-sandbox-mcp"
       ]
     }
   }
@@ -53,7 +53,7 @@ docker pull python:3.11-slim
 docker run --rm -it \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -e SANDBOX_MEMORY_LIMIT=1g \
-  ghcr.io/li-xiu-qi/python-code-sandbox-mcp
+  aixiaoke/python-code-sandbox-mcp
 ```
 
 ## 配置说明
@@ -112,3 +112,4 @@ docker run --rm -it \
 
 ## 开源协议
 MIT
+

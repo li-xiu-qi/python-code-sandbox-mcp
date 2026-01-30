@@ -1,4 +1,4 @@
-# Python Code Sandbox MCP Server
+﻿# Python Code Sandbox MCP Server
 
 [![Chinese](https://img.shields.io/badge/lang--red.svg)](README_ZH.md)
 
@@ -41,7 +41,7 @@ Add this to your `claude_desktop_config.json`:
         "-v", "/var/run/docker.sock:/var/run/docker.sock",
         "-e", "SANDBOX_MEMORY_LIMIT=1g",
         "-e", "SANDBOX_CPU_LIMIT=0.5",
-        "ghcr.io/li-xiu-qi/python-code-sandbox-mcp"
+        "aixiaoke/python-code-sandbox-mcp"
       ]
     }
   }
@@ -54,7 +54,7 @@ Add this to your `claude_desktop_config.json`:
 docker run --rm -it \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -e SANDBOX_MEMORY_LIMIT=1g \
-  ghcr.io/li-xiu-qi/python-code-sandbox-mcp stdio
+  aixiaoke/python-code-sandbox-mcp stdio
 ```
 
 ## Configuration
@@ -128,3 +128,4 @@ Once connected, try these prompts to verify:
 
 ## License
 MIT
+
