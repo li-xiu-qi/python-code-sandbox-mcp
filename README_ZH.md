@@ -56,6 +56,49 @@ docker run --rm -it \
   aixiaoke/python-code-sandbox-mcp
 ```
 
+### 本地开发（不打包为 Docker）
+
+如果你想直接从源代码运行服务器（用于开发或调试）：
+
+**前提条件：**
+- Python 3.10+
+- [uv](https://docs.astral.sh/uv/) 包管理器（安装：`curl -LsSf https://astral.sh/uv/install.sh | sh` 或 `pip install uv`）
+- Docker（仍需用于运行沙箱容器）
+
+**Windows 用户注意：** 推荐使用带有 WSL2 后端的 Docker Desktop。确保在 Docker 设置中启用了 "Use the WSL 2 based engine"。
+
+**步骤：**
+
+```bash
+# 1. 克隆仓库
+git clone https://github.com/li-xiu-qi/python-code-sandbox-mcp.git
+cd python-code-sandbox-mcp
+
+# 2. 安装依赖
+uv sync --extra dev
+
+# 3. 运行服务器
+uv run python -m python_code_sandbox_mcp.server
+```
+
+**Claude Desktop 本地开发配置：**
+
+```json
+{
+  "mcpServers": {
+    "python-sandbox": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--project",
+        "/path/to/python-code-sandbox-mcp",
+        "python-code-sandbox"
+      ]
+    }
+  }
+}
+```
+
 ## 配置说明
 
 服务端支持通过环境变量或 `.env` 文件进行配置。核心选项：

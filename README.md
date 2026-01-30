@@ -57,6 +57,49 @@ docker run --rm -it \
   aixiaoke/python-code-sandbox-mcp stdio
 ```
 
+### Local Development (Without Docker Packaging)
+
+If you want to run the server directly from source code (for development or debugging):
+
+**Prerequisites:**
+- Python 3.10+
+- [uv](https://docs.astral.sh/uv/) package manager (install: `curl -LsSf https://astral.sh/uv/install.sh | sh` or `pip install uv`)
+- Docker (still required for running sandbox containers)
+
+**Note for Windows users:** Docker Desktop with WSL2 backend is recommended. Ensure "Use the WSL 2 based engine" is enabled in Docker settings.
+
+**Steps:**
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/li-xiu-qi/python-code-sandbox-mcp.git
+cd python-code-sandbox-mcp
+
+# 2. Install dependencies
+uv sync --extra dev
+
+# 3. Run the server
+uv run python -m python_code_sandbox_mcp.server
+```
+
+**For Claude Desktop local development:**
+
+```json
+{
+  "mcpServers": {
+    "python-sandbox": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--project",
+        "/path/to/python-code-sandbox-mcp",
+        "python-code-sandbox"
+      ]
+    }
+  }
+}
+```
+
 ## Configuration
 
 The server supports configuration via environment variables or a `.env` file. Key options include:
