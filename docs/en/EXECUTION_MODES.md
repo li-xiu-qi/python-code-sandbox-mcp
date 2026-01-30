@@ -1,4 +1,4 @@
-# Execution Modes Design Document
+﻿# Execution Modes Design Document
 
 This document details the two execution modes of Python Code Sandbox MCP, clarifies common misconceptions, and guides you on selecting the appropriate mode.
 
@@ -358,3 +358,4 @@ Key points:
 | **Dependency Reuse** | Session mode only needs to install once |
 
 Choose the appropriate mode and understand its limitations correctly to better use Python Code Sandbox MCP.
+

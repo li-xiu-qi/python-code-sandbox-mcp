@@ -1,4 +1,4 @@
-# Usage Guide
+﻿# Usage Guide
 
 ## Quick Start: Using .env File (Recommended)
 
@@ -253,3 +253,4 @@ For more troubleshooting tips, see [TROUBLESHOOTING.md](./TROUBLESHOOTING.md).
 - [Examples](./EXAMPLES.md) - Practical code examples
 - [PERSISTENCE.md](./PERSISTENCE.md) - File persistence details
 - [SECURITY.md](./SECURITY.md) - Security considerations
+

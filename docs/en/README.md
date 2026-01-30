@@ -1,4 +1,4 @@
-# Python Code Sandbox MCP - Documentation
+﻿# Python Code Sandbox MCP - Documentation
 
 Welcome to the Python Code Sandbox MCP documentation. This directory contains comprehensive guides for using, configuring, and understanding the server.
 
@@ -82,3 +82,4 @@ Documentation improvements are welcome! Please:
 4. Follow the existing markdown style
 
 See [CONTRIBUTING.md](../CONTRIBUTING.md) for contribution guidelines.
+

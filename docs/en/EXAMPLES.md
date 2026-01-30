@@ -1,4 +1,4 @@
-# Examples
+﻿# Examples
 
 Practical examples demonstrating various use cases of the Python Code Sandbox MCP server.
 
@@ -560,3 +560,4 @@ print(f"Available memory: {psutil.virtual_memory().available / 1e9:.2f} GB")
 ```
 
 **Dependencies**: `psutil`
+

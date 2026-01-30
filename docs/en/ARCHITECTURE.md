@@ -1,4 +1,4 @@
-# Architecture
+﻿# Architecture
 
 ## Overview
 
@@ -44,3 +44,4 @@ To support one-off tasks and file generation (e.g., plotting), an ephemeral flow
 - **Persistence**: Filesystem changes within `/workspace` persist for the life of the container.
 - **Session Scope**: A `container_id` defines a session. Once `sandbox_stop` is called or the container times out, all state is lost.
 - **Concurrency**: The server uses a thread-safe dictionary (`active_sandboxes`) to track multiple concurrent sessions, allowing different users or agents to have their own isolated environments simultaneously.
+

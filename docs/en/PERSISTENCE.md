@@ -1,4 +1,4 @@
-# File Persistence Design
+﻿# File Persistence Design
 
 This document explains the file persistence design in the Python Code Sandbox MCP server.
 
@@ -92,7 +92,7 @@ plt.savefig("./files/chart.png")
 version: '3.8'
 services:
   mcp-sandbox:
-    image: ghcr.io/li-xiu-qi/python-code-sandbox-mcp
+    image: aixiaoke/python-code-sandbox-mcp
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./sandbox-output:/workspace/files  # Persistent storage
@@ -115,7 +115,7 @@ services:
         "-v", "/var/run/docker.sock:/var/run/docker.sock",
         "-v", "/Users/me/sandbox-output:/workspace/files",
         "-e", "SANDBOX_FILES_DIR=/workspace/files",
-        "ghcr.io/li-xiu-qi/python-code-sandbox-mcp"
+        "aixiaoke/python-code-sandbox-mcp"
       ]
     }
   }
@@ -216,3 +216,4 @@ filename = f"./files/report_{timestamp}.csv"
 - Write large files (>100MB) without checking disk space
 - Store sensitive data without encryption
 - Assume persistence is enabled without checking configuration
+

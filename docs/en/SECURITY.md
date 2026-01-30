@@ -1,4 +1,4 @@
-# Security Considerations
+﻿# Security Considerations
 
 ## Isolation Model
 
@@ -26,3 +26,4 @@ To prevent a runaway script from crashing the host machine, the following limits
 - [ ] Add option to disable network access (network=none).
 - [ ] Add configurable timeout for individual code execution (not just container life).
 - [ ] Support mounting specific host directories for input/output.
+

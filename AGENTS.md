@@ -1,4 +1,4 @@
-# Python Code Sandbox MCP - AGENTS.md
+﻿# Python Code Sandbox MCP - AGENTS.md
 
 ## 项目概述
 
@@ -180,7 +180,7 @@ docker build -t python-code-sandbox-mcp .
 docker run --rm -it \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -e SANDBOX_MEMORY_LIMIT=1g \
-  ghcr.io/li-xiu-qi/python-code-sandbox-mcp
+  aixiaoke/python-code-sandbox-mcp
 
 # 预拉取基础镜像（加速首次执行）
 docker pull python:3.11-slim
@@ -260,7 +260,7 @@ GitHub Actions 工作流包括：
 
 镜像发布到 GitHub Container Registry (GHCR)：
 ```
-ghcr.io/li-xiu-qi/python-code-sandbox-mcp:latest
+aixiaoke/python-code-sandbox-mcp:latest
 ```
 
 ### Claude Desktop 配置
@@ -276,7 +276,7 @@ ghcr.io/li-xiu-qi/python-code-sandbox-mcp:latest
         "--rm",
         "-v", "/var/run/docker.sock:/var/run/docker.sock",
         "-e", "SANDBOX_MEMORY_LIMIT=1g",
-        "ghcr.io/li-xiu-qi/python-code-sandbox-mcp"
+        "aixiaoke/python-code-sandbox-mcp"
       ]
     }
   }
@@ -510,3 +510,4 @@ repos:
 - [uv 文档](https://docs.astral.sh/uv/)
 - [Docker SDK for Python](https://docker-py.readthedocs.io/)
 - [项目 GitHub](https://github.com/li-xiu-qi/python-code-sandbox-mcp)
+

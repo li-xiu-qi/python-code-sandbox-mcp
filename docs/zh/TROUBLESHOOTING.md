@@ -1,4 +1,4 @@
-# 故障排除与开发备忘 (Troubleshooting)
+﻿# 故障排除与开发备忘 (Troubleshooting)
 
 记录在项目开发和 CI/CD 过程中遇到的典型问题及其解决方案。
 

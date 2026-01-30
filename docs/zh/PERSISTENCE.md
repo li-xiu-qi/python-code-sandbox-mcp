@@ -1,4 +1,4 @@
-# 文件持久化设计
+﻿# 文件持久化设计
 
 本文档说明了 Python Code Sandbox MCP 服务器中文件持久化的设计实现。
 
@@ -108,3 +108,4 @@ print("Report generated")
 *   如果未配置 `SANDBOX_FILES_DIR`，`/workspace/files` 将仅作为容器内的普通目录存在，容器销毁后数据将丢失。
 *   请确保宿主机路径具有读写权限。
 *   二进制文件（PDF、Word、Excel 等）在禁用持久化时只能通过响应获取大小信息，无法获取内容。
+

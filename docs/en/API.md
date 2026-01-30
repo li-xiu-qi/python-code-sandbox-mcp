@@ -1,4 +1,4 @@
-# API Reference
+﻿# API Reference
 
 Complete reference for all tools provided by the Python Code Sandbox MCP server.
 
@@ -464,3 +464,4 @@ interface EmbeddedResource {
   };
 }
 ```
+

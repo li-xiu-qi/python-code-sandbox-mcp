@@ -1,4 +1,4 @@
-# Python Code Sandbox MCP - 文档中心
+﻿# Python Code Sandbox MCP - 文档中心
 
 欢迎访问 Python Code Sandbox MCP 文档。本文档目录包含使用该服务器的完整指南。
 
@@ -78,3 +78,4 @@ English documentation is available in the parent directory:
 4. 遵循现有的 Markdown 风格
 
 参见 [CONTRIBUTING.md](../../CONTRIBUTING.md) 了解贡献指南。
+

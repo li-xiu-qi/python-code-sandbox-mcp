@@ -1,4 +1,4 @@
-# Troubleshooting & Dev Notes
+﻿# Troubleshooting & Dev Notes
 
 A summary of common issues encountered during development and CI/CD, and their solutions.
 
@@ -66,3 +66,4 @@ permissions:
 **Symptom**: Error `Unknown tag type attribute: latest`.
 **Reason**: YAML parsing issues with multiline blocks or `type=latest` interpretation.
 **Solution**: Use the more robust `type=raw,value=latest` definition.
+

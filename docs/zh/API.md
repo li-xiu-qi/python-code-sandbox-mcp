@@ -1,4 +1,4 @@
-# API 参考文档
+﻿# API 参考文档
 
 Python Code Sandbox MCP 服务器提供的所有工具的完整参考。
 
@@ -464,3 +464,4 @@ interface EmbeddedResource {
   };
 }
 ```
+

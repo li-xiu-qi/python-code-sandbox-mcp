@@ -1,4 +1,4 @@
-# 使用示例
+﻿# 使用示例
 
 本文档展示 Python Code Sandbox MCP 服务器的各种使用场景和代码示例。
 
@@ -601,3 +601,4 @@ print(f"路径: {sys.path}")
 import subprocess
 subprocess.run([sys.executable, '-m', 'pip', 'list'])
 ```
+

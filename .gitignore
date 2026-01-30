@@ -41,8 +41,11 @@ examples/output/
 
 # Test files (local only, do not commit)
 examples/test_*.py
-TEST_REPORT.md
+TEST_REPORT*.md
 DOCKERHUB_SETUP.md
+
+# Lock files (optional)
+# uv.lock
 
 # Temporary test directories
 /tmp/my_custom_sandbox_files/

@@ -1,4 +1,4 @@
-# 执行模式设计文档
+﻿# 执行模式设计文档
 
 本文档详细说明 Python Code Sandbox MCP 的两种执行模式，澄清常见的误解，并指导如何选择合适的模式。
 
@@ -358,3 +358,4 @@ def start_sandbox(image: str = "python:3.11-slim") -> str:
 | **依赖复用** | 会话模式只需安装一次 |
 
 选择合适的模式，正确理解其限制，才能更好地使用 Python Code Sandbox MCP。
+

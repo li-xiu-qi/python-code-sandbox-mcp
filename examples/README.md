@@ -1,4 +1,4 @@
-#  Python Code Sandbox MCP - 
+﻿#  Python Code Sandbox MCP - 
 
  Python MCP Client  Python Code Sandbox MCP Server 
 
@@ -92,7 +92,7 @@ server_params = get_docker_server_params(memory_limit="1g")
 
 
 ```bash
-docker pull ghcr.io/li-xiu-qi/python-code-sandbox-mcp
+docker pull aixiaoke/python-code-sandbox-mcp
 ```
 
 ##  
@@ -170,7 +170,7 @@ python 01_basic_print.py
         "-v", "/var/run/docker.sock:/var/run/docker.sock",
         "-e", "SANDBOX_MEMORY_LIMIT=1g",
         "-e", "SANDBOX_FILES_DIR=/host/path/to/files",
-        "ghcr.io/li-xiu-qi/python-code-sandbox-mcp"
+        "aixiaoke/python-code-sandbox-mcp"
       ]
     }
   }
@@ -316,3 +316,4 @@ if __name__ == "__main__":
 ---
 
 **Happy Coding! **
+

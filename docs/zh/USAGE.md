@@ -1,4 +1,4 @@
-# 使用指南
+﻿# 使用指南
 
 ## 快速开始：使用 .env 文件 (推荐)
 
@@ -243,3 +243,4 @@ export SANDBOX_CPU_QUOTA=25000   # 0.25 核
 - [示例](./EXAMPLES.md) - 实用代码示例
 - [PERSISTENCE.md](./PERSISTENCE.md) - 文件持久化详情
 - [SECURITY.md](./SECURITY.md) - 安全考虑
+
