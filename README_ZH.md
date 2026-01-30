@@ -1,4 +1,4 @@
-# 🐍🚀 Python 代码沙箱 MCP 服务端
+# Python 代码沙箱 MCP 服务端
 
 [![English](https://img.shields.io/badge/lang-English-blue.svg)](README.md)
 
@@ -13,7 +13,7 @@
 - **安全第一**：支持 CPU/内存资源限制，容器内非 root 用户运行。
 - **文件回传**：自动捕获脚本生成的图片（如绘图）和文件。
 
-## ⚠️ 前提条件
+## 前提条件
 
 必须在本地安装并运行 Docker。
 
@@ -94,10 +94,21 @@ docker run --rm -it \
 
 ## 项目文档
 
-- [详细使用指南](docs/zh/USAGE.md)
-- [架构设计说明](docs/zh/ARCHITECTURE.md)
-- [安全准则](docs/zh/SECURITY.md)
-- [故障排除手册](docs/zh/TROUBLESHOOTING.md)
+- [使用指南](docs/zh/USAGE.md) - 安装、配置和使用说明
+- [API 参考](docs/zh/API.md) - 完整工具文档
+- [执行模式](docs/zh/EXECUTION_MODES.md) - 临时模式与会话模式详解
+- [使用示例](docs/zh/EXAMPLES.md) - 实用代码示例
+- [文件持久化](docs/zh/PERSISTENCE.md) - 文件持久化和存储
+- [架构设计](docs/zh/ARCHITECTURE.md) - 系统设计
+- [安全准则](docs/zh/SECURITY.md) - 安全指南
+- [故障排除](docs/zh/TROUBLESHOOTING.md) - 常见问题和解决方案
+
+### English Documentation
+
+- [Usage Guide](docs/en/USAGE.md)
+- [API Reference](docs/en/API.md)
+- [Execution Modes](docs/en/EXECUTION_MODES.md)
+- [Examples](docs/en/EXAMPLES.md)
 
 ## 开源协议
 MIT
