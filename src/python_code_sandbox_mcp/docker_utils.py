@@ -1,10 +1,14 @@
-import docker
-from docker.errors import NotFound, APIError
+import base64
 import logging
-import uuid
-import time
 import os
-from typing import Dict, List, Tuple
+import tempfile
+import time
+import uuid
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple
+
+import docker
+from docker.errors import APIError, NotFound
 
 logger = logging.getLogger(__name__)
 
@@ -13,6 +17,10 @@ logger = logging.getLogger(__name__)
 PIP_CACHE_PATH = os.getenv("PIP_CACHE_PATH")
 ENABLE_PIP_CACHE = os.getenv("ENABLE_PIP_CACHE", "true").lower() == "true"
 
+# Host path for persistent files
+# Priority: SANDBOX_FILES_DIR > Auto temp dir > None (no persistence)
+SANDBOX_FILES_DIR = os.getenv("SANDBOX_FILES_DIR")
+
 # Resource Limits
 SANDBOX_MEMORY_LIMIT = os.getenv("SANDBOX_MEMORY_LIMIT", "2g")
 SANDBOX_CPU_PERIOD = int(os.getenv("SANDBOX_CPU_PERIOD", "100000"))
@@ -20,6 +28,9 @@ SANDBOX_CPU_QUOTA = int(os.getenv("SANDBOX_CPU_QUOTA", "50000"))
 
 # Registry to track active containers and their creation time
 active_sandboxes: Dict[str, float] = {}
+
+# Track the actual files directory being used (for retrieval)
+_current_files_dir: Optional[str] = None
 
 
 def get_docker_client():
@@ -41,6 +52,56 @@ def is_docker_running() -> bool:
         return False
 
 
+def get_files_dir() -> Optional[str]:
+    """
+    获取用于持久化文件的宿主机目录。
+
+    优先级：
+    1. SANDBOX_FILES_DIR 环境变量（如果设置为空字符串，则禁用持久化）
+    2. 系统自动创建的临时目录（智能默认）
+
+    Returns:
+        宿主机目录路径，如果禁用持久化则返回 None
+    """
+    global _current_files_dir
+
+    # 如果已经确定，直接返回
+    if _current_files_dir is not None:
+        return _current_files_dir if _current_files_dir else None
+
+    # 1. 检查环境变量
+    env_value = os.getenv("SANDBOX_FILES_DIR")
+
+    if env_value is not None:
+        # 用户明确设置了（即使是空字符串）
+        if env_value == "":
+            # 空字符串表示禁用持久化
+            _current_files_dir = ""
+            logger.info("File persistence disabled (SANDBOX_FILES_DIR='')")
+            return None
+        else:
+            # 使用用户指定的路径
+            _current_files_dir = env_value
+            logger.info(f"Using user-specified files directory: {_current_files_dir}")
+            return _current_files_dir
+
+    # 2. 智能默认：使用系统临时目录
+    tmp_dir = Path(tempfile.gettempdir()) / "python-sandbox-mcp" / "files"
+    tmp_dir.mkdir(parents=True, exist_ok=True)
+    _current_files_dir = str(tmp_dir)
+
+    logger.info(f"Using default temp files directory: {_current_files_dir}")
+    logger.info(f"Files will be persisted to: {_current_files_dir}")
+
+    return _current_files_dir
+
+
+def reset_files_dir():
+    """重置文件目录（主要用于测试）"""
+    global _current_files_dir
+    _current_files_dir = None
+
+
 def start_sandbox(image: str = "python:3.11-slim", timeout_seconds: int = 300) -> str:
     """
     Start a new Python sandbox container.
@@ -53,11 +114,22 @@ def start_sandbox(image: str = "python:3.11-slim", timeout_seconds: int = 300) -
     try:
         logger.info(f"Starting sandbox container {container_name} with image {image}")
 
-        # Configure volumes for pip cache if enabled and path is provided
+        # Configure volumes
         volumes = {}
+
+        # 1. Pip cache
         if ENABLE_PIP_CACHE and PIP_CACHE_PATH:
             # We mount the provided host path to the standard pip cache location in the container
             volumes[PIP_CACHE_PATH] = {"bind": "/root/.cache/pip", "mode": "rw"}
+
+        # 2. Persistent files (智能默认)
+        files_dir = get_files_dir()
+        if files_dir:
+            # Ensure the directory exists on host
+            os.makedirs(files_dir, exist_ok=True)
+            # 挂载到容器的 /workspace 目录
+            volumes[files_dir] = {"bind": "/workspace", "mode": "rw"}
+            logger.info(f"Mounted {files_dir} to /workspace for file persistence")
 
         container = client.containers.run(
             image,
@@ -154,8 +226,6 @@ def run_python_code(container_id: str, code: str) -> Tuple[str, str]:
     # 对于健壮的多行字符串，我们可能需要比简单的 echo 更好的方法。
     # 但是通过 python 单行命令写入临时文件在转义方面更安全。
 
-    import base64
-
     b64_code = base64.b64encode(code.encode("utf-8")).decode("utf-8")
 
     # 一次性解码并运行
@@ -169,21 +239,32 @@ def run_python_code(container_id: str, code: str) -> Tuple[str, str]:
 def list_files(container_id: str, path: str = "/workspace") -> List[str]:
     """
     列出容器内指定目录下的文件。
+    返回文件的相对路径。
     """
-    # ls -p 会给目录添加 /。grep -v / 会过滤掉它们。
-    cmd = f"ls -p {path} | grep -v /"
+    # -F adds / to directories, -R is recursive
+    # We want to find all files but ignore some directories like __pycache__
+    cmd = f"find {path} -maxdepth 2 -not -path '*/.*' -type f"
     exit_code, stdout, stderr = exec_command(container_id, cmd)
     if exit_code != 0:
         return []
-    return [f.strip() for f in stdout.split("\n") if f.strip()]
+
+    files = []
+    for f in stdout.split("\n"):
+        f = f.strip()
+        if not f:
+            continue
+        # Convert absolute path to relative path from /workspace
+        rel_path = os.path.relpath(f, "/workspace")
+        if rel_path.startswith(".."):
+            continue
+        files.append(rel_path)
+    return files
 
 
 def read_file(container_id: str, filepath: str) -> bytes:
     """
     Read file content from container. Returns bytes.
     """
-    import base64
-
     # Use base64 inside the container to safely cat binary files
     # Quote the filepath to handle spaces
     cmd = f"cat '{filepath}' | base64"
@@ -199,6 +280,46 @@ def read_file(container_id: str, filepath: str) -> bytes:
         return base64.b64decode(clean_b64)
     except Exception as e:
         raise RuntimeError(f"Failed to decode file {filepath}: {e}")
+
+
+def read_file_from_host(filename: str) -> Optional[bytes]:
+    """
+    从宿主机的持久化目录读取文件。
+    用于在容器销毁后获取文件。
+
+    Args:
+        filename: 文件名（相对路径）
+
+    Returns:
+        文件内容，如果文件不存在或持久化未启用则返回 None
+    """
+    files_dir = get_files_dir()
+    if not files_dir:
+        return None
+
+    file_path = Path(files_dir) / filename
+    if not file_path.exists():
+        return None
+
+    return file_path.read_bytes()
+
+
+def list_host_files() -> List[str]:
+    """
+    列出宿主机持久化目录中的所有文件。
+
+    Returns:
+        文件名列表
+    """
+    files_dir = get_files_dir()
+    if not files_dir:
+        return []
+
+    path = Path(files_dir)
+    if not path.exists():
+        return []
+
+    return [f.name for f in path.iterdir() if f.is_file()]
 
 
 def cleanup_old_containers(max_age_seconds: int = 3600):

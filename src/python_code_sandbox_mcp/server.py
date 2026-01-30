@@ -1,14 +1,17 @@
-from mcp.server.fastmcp import FastMCP
-from pydantic import Field
-from typing import List, Union
-import logging
-import mcp.types as types
 import base64
-import httpx
+import logging
 import threading
 import time
+from typing import List, Union
+
+import httpx
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
+from mcp.server.fastmcp import FastMCP
+from pydantic import Field
+
+import mcp.types as types
+
 from . import docker_utils
 
 # Load environment variables from .env file if it exists
@@ -69,6 +72,13 @@ async def run_python(
     """
     在运行的沙箱容器内安装依赖项并执行 Python 代码。
 
+    文件默认会持久化到宿主机的临时目录：
+    - Windows: %TEMP%/python-sandbox-mcp/files/
+    - macOS/Linux: /tmp/python-sandbox-mcp/files/
+
+    你也可以通过 SANDBOX_FILES_DIR 环境变量自定义保存位置。
+    代码中创建的文件会保存在 /workspace 目录下。
+
     Args:
         container_id: 沙箱容器的 ID。
         code: 要执行的 Python 代码。
@@ -112,6 +122,15 @@ async def run_python_ephemeral(
     在临时容器中运行一次性 Python 脚本。
     返回控制台输出和工作区中创建的任何文件。
 
+    文件默认会持久化到宿主机的临时目录：
+    - Windows: %TEMP%/python-sandbox-mcp/files/
+    - macOS/Linux: /tmp/python-sandbox-mcp/files/
+
+    你也可以通过 SANDBOX_FILES_DIR 环境变量自定义保存位置，
+    或设置 SANDBOX_FILES_DIR="" 来禁用持久化。
+
+    代码中创建的文件保存在 /workspace 目录下，会被自动检测并返回。
+
     Args:
         code: 要执行的 Python 代码。
         dependencies: 要安装的 pip 包列表。
@@ -147,23 +166,26 @@ async def run_python_ephemeral(
         content_list.append(types.TextContent(type="text", text=console_output))
 
         files = docker_utils.list_files(container_id)
-        for fname in files:
-            # 如果需要，跳过常见的隐藏文件或系统文件
-            if fname.startswith("."):
+        for rel_path in files:
+            # 跳过特定目录
+            if "pycache" in rel_path or rel_path.startswith("."):
                 continue
 
-            file_data = docker_utils.read_file(container_id, f"/workspace/{fname}")
+            file_data = docker_utils.read_file(container_id, f"/workspace/{rel_path}")
 
             # 确定类型
-            lower_name = fname.lower()
+            lower_name = rel_path.lower()
             if lower_name.endswith((".png", ".jpg", ".jpeg", ".gif", ".webp")):
                 # 图像
                 b64_data = base64.b64encode(file_data).decode("utf-8")
+                # Determine mime type
+                ext = lower_name.split(".")[-1]
+                mime_type = f"image/{ext if ext != 'jpg' else 'jpeg'}"
                 content_list.append(
                     types.ImageContent(
                         type="image",
                         data=b64_data,
-                        mimeType=f"image/{lower_name.split('.')[-1] if lower_name.split('.')[-1] != 'jpg' else 'jpeg'}",
+                        mimeType=mime_type,
                     )
                 )
             else:
@@ -172,14 +194,18 @@ async def run_python_ephemeral(
                     text_content = file_data.decode("utf-8")
                     content_list.append(
                         types.TextContent(
-                            type="text", text=f"--- File: {fname} ---\n{text_content}\n"
+                            type="text",
+                            text=f"--- File: {rel_path} ---\n{text_content}\n",
                         )
                     )
                 except UnicodeDecodeError:
                     content_list.append(
                         types.TextContent(
                             type="text",
-                            text=f"--- File: {fname} (Binary content, {len(file_data)} bytes) ---\n",
+                            text=(
+                                f"--- File: {rel_path} "
+                                f"(Binary content, {len(file_data)} bytes) ---\n"
+                            ),
                         )
                     )
 
@@ -212,7 +238,10 @@ async def search_pypi_packages(query: str) -> str:
     url = "https://pypi.org/search/"
     params = {"q": query}
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+            "(KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        )
     }
 
     try:
@@ -236,7 +265,8 @@ async def search_pypi_packages(query: str) -> str:
 
                 output.append(f"- **{name}** ({version}): {desc}")
 
-        # Fallback to JSON API for exact match if search fails (common for single package lookup)
+        # Fallback to JSON API for exact match if search fails
+        # (common for single package lookup)
         if not output:
             json_url = f"https://pypi.org/pypi/{query}/json"
             async with httpx.AsyncClient(headers=headers) as client:
